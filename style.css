@@ -1,0 +1,21 @@
+:root {
+    --back: #000000;
+    --main: #202020; 
+    --border: #ffffff;
+    --text: #ffffff;
+}
+
+html {
+    background-color: var(--back);
+    border-color: var(--border);
+    color: var(--text);
+    overflow: hidden;
+}
+
+div {
+    padding: 10px;
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 3px;
+}
