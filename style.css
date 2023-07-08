@@ -10,12 +10,65 @@ html {
     border-color: var(--border);
     color: var(--text);
     overflow: hidden;
+    padding: 50px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
-div {
+.div {
     padding: 10px;
     background-color: var(--main);
     border: 1px solid var(--border);
     color: var(--text);
     border-radius: 3px;
+    height: fit-content;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.top_bar {
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 100vw;
+    padding: 10px;
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.top_bar .button {
+    display: inline;
+    padding: 5px;
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.canvas_layer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Courier New', Courier, monospace;
+    cursor: crosshair;
+}
+
+.asset {
+    visibility: hidden;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+select {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.separator {
+    display: inline;
+    border-left: 1px solid var(--border);
+    height: max-content;
+    width: 0;
+    margin: 5px;
 }
