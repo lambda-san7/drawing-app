@@ -182,8 +182,9 @@ circle.style.visibility = "hidden"
 document.body.appendChild(circle);
 
 canvas.addEventListener("mousemove", function(event) {
-    circle.style.left = (event.clientX - 15) + "px";
-    circle.style.top = (event.clientY - 15) + "px";
+    console.log()
+    circle.style.left = (event.clientX - (parseInt(circle.style.width) / 2)) + "px";
+    circle.style.top = (event.clientY - (parseInt(circle.style.height) / 2)) + "px";
     circle.style.visibility = "visible"
 });
 
