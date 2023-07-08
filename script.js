@@ -4,7 +4,6 @@ var drawing = false;
 var pen_size = 30;
 var tool = "pen";
 var current_color = "black";
-var current_operation = "source-over"
 var css_root = document.querySelector(':root')
 
 // Elements
@@ -59,6 +58,12 @@ const themes = {
         css_set("border","#ffffff")
         css_set("text","#ffffff")
     },
+    terminal: function(){
+        css_set("back","#000000")
+        css_set("main","#000000")
+        css_set("border","#00ff00")
+        css_set("text","#00ff00")
+    },
     update: function(select){
         eval("themes." + select.value + "()")
     },
@@ -68,11 +73,10 @@ const themes = {
 
 const tools = {
     pen: function(){
-        current_operation = "source-over"
+        tool = "pen"
     },
     eraser: function(){
-        console.log("erase")
-        current_operation = "destination-out"
+        tool = "eraser"
     },
     update: function(select){
         eval("tools." + select.value + "()")
@@ -80,11 +84,18 @@ const tools = {
 }
 
 function change_size(destination){
+    if(destination > 100){
+        destination = 100
+    }
     pen_size = destination
     circle.style.width = pen_size
     circle.style.height = pen_size
-    document.getElementById("size_box").innerHTML = pen_size
+    document.getElementById("size_box").value = pen_size
     document.getElementById("size_slider").value = pen_size
+}
+
+function change_color(destination){
+    current_color = destination
 }
 
 // Layers
@@ -123,39 +134,70 @@ transparent_layer.ctx.stroke();
 var layer1 = new Layer("layer1");
 
 // Event Handling
+tools.pen()
 
-document.addEventListener('mousedown', startPosition);
-document.addEventListener('mouseup', finishedPosition);
+document.addEventListener('mousedown', start);
+document.addEventListener('mouseup', end);
 document.addEventListener('mousemove', draw);
 document.addEventListener('keydown', shortcut);
 
-function startPosition(e) {
-    drawing = true;
-    layer1.save();
+function start(e) {
+    if(tool == "pen"){
+        drawing = true;
+        layer1.save();
+    }
+    if(tool == "eraser"){
+        drawing = true;
+        layer1.save();
+    }
 }
 
-function finishedPosition() {
-    drawing = false;
-    layer1.ctx.beginPath();
+function end() {
+    if(tool == "pen"){
+        drawing = false;
+        layer1.ctx.beginPath();
+    }
+    if(tool == "eraser"){
+        drawing = false;
+        layer1.ctx.beginPath();
+    }
 }
 
 flag = false
 
 function draw(e) {
-    if (!drawing) return;
-    var rect = layer1.canvas.getBoundingClientRect(),
-        scaleX = layer1.canvas.width / rect.width,
-        scaleY = layer1.canvas.height / rect.height,
-        x = (e.clientX - rect.left) * scaleX,
-        y = (e.clientY - rect.top) * scaleY;
-    layer1.ctx.globalCompositeOperation = current_operation
-    layer1.ctx.lineWidth = pen_size;
-    layer1.ctx.lineCap = "round";
-    layer1.ctx.strokeStyle = current_color;
-    layer1.ctx.lineTo(x, y);
-    layer1.ctx.stroke();
-    layer1.ctx.beginPath();
-    layer1.ctx.moveTo(x, y);
+    if(tool == "pen"){
+        if (!drawing) return;
+        var rect = layer1.canvas.getBoundingClientRect(),
+            scaleX = layer1.canvas.width / rect.width,
+            scaleY = layer1.canvas.height / rect.height,
+            x = (e.clientX - rect.left) * scaleX,
+            y = (e.clientY - rect.top) * scaleY;
+        layer1.ctx.globalCompositeOperation = "source-over"
+        layer1.ctx.lineWidth = pen_size;
+        layer1.ctx.lineCap = "round";
+        layer1.ctx.strokeStyle = current_color;
+        layer1.ctx.lineTo(x, y);
+        layer1.ctx.stroke();
+        layer1.ctx.beginPath();
+        layer1.ctx.moveTo(x, y);
+    }
+    if(tool == "eraser"){
+        if (!drawing) return;
+        var rect = layer1.canvas.getBoundingClientRect(),
+            scaleX = layer1.canvas.width / rect.width,
+            scaleY = layer1.canvas.height / rect.height,
+            x = (e.clientX - rect.left) * scaleX,
+            y = (e.clientY - rect.top) * scaleY;
+        layer1.ctx.globalCompositeOperation = "destination-out"
+        layer1.ctx.lineWidth = pen_size;
+        layer1.ctx.lineCap = "round";
+        layer1.ctx.strokeStyle = current_color;
+        layer1.ctx.lineTo(x, y);
+        layer1.ctx.stroke();
+        layer1.ctx.beginPath();
+        layer1.ctx.moveTo(x, y);
+    }
 }
 
 // Keyboard Shortcuts

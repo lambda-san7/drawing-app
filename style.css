@@ -54,6 +54,7 @@ html {
     transform: translate(-50%, -50%);
     font-family: 'Courier New', Courier, monospace;
     cursor: crosshair;
+    border: 1px solid var(--border);
 }
 
 .asset {
@@ -63,6 +64,9 @@ html {
 
 select {
     font-family: 'Courier New', Courier, monospace;
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    color: var(--text);
 }
 
 .separator {
@@ -71,4 +75,43 @@ select {
     height: max-content;
     width: 0;
     margin: 5px;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--border);
+    border-radius: 100px;
+    height: 1px;
+}
+  
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--border);
+    cursor: pointer;
+    border-radius: 100px;
+}
+
+.text {
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: var(--main);
+    border: 1px solid var(--border);
+    color: var(--text);
+}
+
+.color {
+    -webkit-appearance: none;
+    appearance: none;
+    -moz-appearance: none;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--text);
+    height: 30px;
+    width: 30px;
+    border-radius: 100px;
+    cursor:pointer;
 }
