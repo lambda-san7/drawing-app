@@ -78,6 +78,12 @@ const tools = {
     eraser: function(){
         tool = "eraser"
     },
+    line: function(){
+        tool = "line"
+    },
+    rect: function(){
+        tool = "rect"
+    },
     update: function(select){
         eval("tools." + select.value + "()")
     }
@@ -103,19 +109,29 @@ function change_color(destination){
 class Layer {
     constructor(name) {
         this.element = document.createElement("canvas");
-        this.element.id = name;
         this.element.style.position = "absolute";
         canvas.appendChild(this.element);
-        this.canvas = document.getElementById(name);
-        this.canvas.width = 900;
-        this.canvas.height = 450;
-        this.canvas.classList.add("canvas_layer")
-        this.ctx = this.canvas.getContext("2d");
+        this.element.width = 900;
+        this.element.height = 450;
+        this.element.classList.add("canvas_layer")
+        this.ctx = this.element.getContext("2d");
         this.ctx.imageSmoothingQuality = "high";
+        this.saves = [];
+
+        // Preview Layer
+
+        this.preview = document.createElement("canvas");
+        this.preview.style.position = "absolute";
+        canvas.appendChild(this.preview);
+        this.preview.width = 900;
+        this.preview.height = 450;
+        this.preview.classList.add("canvas_layer")
+        this.ctx2 = this.preview.getContext("2d");
+        this.ctx2.imageSmoothingQuality = "high";
         this.saves = [];
     }
     save() {
-        this.saves.push(this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height));
+        this.saves.push(this.ctx.getImageData(0, 0, this.element.width, this.element.height));
     }
     undo() {
         if (this.saves.length > 0) {
@@ -142,36 +158,54 @@ document.addEventListener('mouseup', end);
 document.addEventListener('mousemove', draw);
 document.addEventListener('keydown', shortcut);
 
+var ogX = 0
+var ogY = 0
+
 function start(e) {
     if(tool == "pen"){
         drawing = true;
         layer1.save();
+        draw(e)
+    }
+    if(tool == "line"){
+        drawing = true;
+        layer1.save();
+        var rect = layer1.element.getBoundingClientRect(),
+        scaleX = layer1.element.width / rect.width,
+        scaleY = layer1.element.height / rect.height,
+        x = (e.clientX - rect.left) * scaleX,
+        y = (e.clientY - rect.top) * scaleY;
+        ogX = x
+        ogY = y
+        console.log(ogX,ogY)
+        draw(e)
+    }
+    if(tool == "rect"){
+        drawing = true;
+        layer1.save();
+        var rect = layer1.element.getBoundingClientRect(),
+        scaleX = layer1.element.width / rect.width,
+        scaleY = layer1.element.height / rect.height,
+        x = (e.clientX - rect.left) * scaleX,
+        y = (e.clientY - rect.top) * scaleY;
+        ogX = x
+        ogY = y
+        console.log(ogX,ogY)
+        draw(e)
     }
     if(tool == "eraser"){
         drawing = true;
         layer1.save();
+        draw(e)
     }
 }
-
-function end() {
-    if(tool == "pen"){
-        drawing = false;
-        layer1.ctx.beginPath();
-    }
-    if(tool == "eraser"){
-        drawing = false;
-        layer1.ctx.beginPath();
-    }
-}
-
-flag = false
 
 function draw(e) {
     if(tool == "pen"){
         if (!drawing) return;
-        var rect = layer1.canvas.getBoundingClientRect(),
-            scaleX = layer1.canvas.width / rect.width,
-            scaleY = layer1.canvas.height / rect.height,
+        var rect = layer1.element.getBoundingClientRect(),
+            scaleX = layer1.element.width / rect.width,
+            scaleY = layer1.element.height / rect.height,
             x = (e.clientX - rect.left) * scaleX,
             y = (e.clientY - rect.top) * scaleY;
         layer1.ctx.globalCompositeOperation = "source-over"
@@ -183,11 +217,44 @@ function draw(e) {
         layer1.ctx.beginPath();
         layer1.ctx.moveTo(x, y);
     }
+    if(tool == "line"){
+        if (!drawing) return;
+        var rect = layer1.element.getBoundingClientRect(),
+            scaleX = layer1.element.width / rect.width,
+            scaleY = layer1.element.height / rect.height,
+            x = (e.clientX - rect.left) * scaleX,
+            y = (e.clientY - rect.top) * scaleY;
+        layer1.ctx2.clearRect(0,0,layer1.element.width,layer1.element.height)
+        layer1.ctx2.globalCompositeOperation = "source-over"
+        layer1.ctx2.lineWidth = pen_size;
+        layer1.ctx2.lineCap = "round";
+        layer1.ctx2.strokeStyle = current_color;
+        layer1.ctx2.moveTo(ogX, ogY);
+        layer1.ctx2.lineTo(x, y);
+        layer1.ctx2.stroke();
+        layer1.ctx2.beginPath();
+    }
+    if(tool == "rect"){
+        if (!drawing) return;
+        var rect = layer1.element.getBoundingClientRect(),
+            scaleX = layer1.element.width / rect.width,
+            scaleY = layer1.element.height / rect.height,
+            x = (e.clientX - rect.left) * scaleX,
+            y = (e.clientY - rect.top) * scaleY;
+        layer1.ctx2.clearRect(0,0,layer1.element.width,layer1.element.height)
+        layer1.ctx2.globalCompositeOperation = "source-over"
+        layer1.ctx2.lineWidth = pen_size;
+        layer1.ctx2.lineCap = "round";
+        layer1.ctx2.strokeStyle = current_color;
+        layer1.ctx2.rect(ogX,ogY,(x - ogX),(y - ogY));
+        layer1.ctx2.stroke();
+        layer1.ctx2.beginPath();
+    }
     if(tool == "eraser"){
         if (!drawing) return;
-        var rect = layer1.canvas.getBoundingClientRect(),
-            scaleX = layer1.canvas.width / rect.width,
-            scaleY = layer1.canvas.height / rect.height,
+        var rect = layer1.element.getBoundingClientRect(),
+            scaleX = layer1.element.width / rect.width,
+            scaleY = layer1.element.height / rect.height,
             x = (e.clientX - rect.left) * scaleX,
             y = (e.clientY - rect.top) * scaleY;
         layer1.ctx.globalCompositeOperation = "destination-out"
@@ -198,6 +265,50 @@ function draw(e) {
         layer1.ctx.stroke();
         layer1.ctx.beginPath();
         layer1.ctx.moveTo(x, y);
+    }
+}
+
+function end(e) {
+    if(tool == "pen"){
+        drawing = false;
+        layer1.ctx.beginPath();
+    }
+    if(tool == "line"){
+        drawing = false;
+        layer1.ctx2.clearRect(0,0,layer1.element.width,layer1.element.height)
+        layer1.ctx.beginPath();
+        var rect = layer1.element.getBoundingClientRect(),
+            scaleX = layer1.element.width / rect.width,
+            scaleY = layer1.element.height / rect.height,
+            x = (e.clientX - rect.left) * scaleX,
+            y = (e.clientY - rect.top) * scaleY;
+        layer1.ctx.globalCompositeOperation = "source-over"
+        layer1.ctx.lineWidth = pen_size;
+        layer1.ctx.lineCap = "round";
+        layer1.ctx.strokeStyle = current_color;
+        layer1.ctx.moveTo(ogX, ogY);
+        layer1.ctx.lineTo(x, y);
+        layer1.ctx.stroke();
+    }
+    if(tool == "rect"){
+        drawing = false;
+        layer1.ctx2.clearRect(0,0,layer1.element.width,layer1.element.height)
+        layer1.ctx.beginPath();
+        var rect = layer1.element.getBoundingClientRect(),
+            scaleX = layer1.element.width / rect.width,
+            scaleY = layer1.element.height / rect.height,
+            x = (e.clientX - rect.left) * scaleX,
+            y = (e.clientY - rect.top) * scaleY;
+        layer1.ctx.globalCompositeOperation = "source-over"
+        layer1.ctx.lineWidth = pen_size;
+        layer1.ctx.lineCap = "round";
+        layer1.ctx.strokeStyle = current_color;
+        layer1.ctx.rect(ogX,ogY,(x - ogX),(y - ogY));
+        layer1.ctx.stroke();
+    }
+    if(tool == "eraser"){
+        drawing = false;
+        layer1.ctx.beginPath();
     }
 }
 
