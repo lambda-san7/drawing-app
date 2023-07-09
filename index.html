@@ -1,9 +1,10 @@
 <html>
+    <img style="filter: blur(10px); position: absolute; top: -10; left: -10; width: 110vw; height: 110vh;" id="back_image">
     <body>
         <div id="top_bar" class="top_bar">
             <button class="button">this1</button>
 
-            <div class="separator"></div>
+            <div class="separator">.</div>
 
             <select name="theme" id="theme_box" onchange="themes.update(this)">
                 <option value="dark">Dark</option>
@@ -11,11 +12,10 @@
                 <option value="sakura">Sakura</option>
                 <option value="buzz">Buzz</option>
                 <option value="pacifica">Pacifica</option>
-                <option value="terminal">Terminal</option>
             </select>
             <label for="theme">Theme</label>
 
-            <div class="separator"></div>
+            <div class="separator">.</div>
 
             <select name="pen" id="pen_box" onchange="tools.update(this)">
                 <option value="pen">Pen</option>
@@ -23,17 +23,17 @@
             </select>
             <label for="pen">Tools</label>
 
-            <div class="separator"></div>
+            <div class="separator">.</div>
 
             <input name="size" type="range" class="slider" min="1" max="100" value="10" id="size_slider" oninput="change_size(this.value)">
             <input type="text" id="size_box" oninput="change_size(this.value)" class="text" style="width: 50px;" value="10"></input>
 
-            <div class="separator"></div>
+            <div class="separator">.</div>
 
             <input class="color" name="color" type="color" oninput="change_color(this.value)"></input>
             <label for="color">Color</label>
 
-            <div class="separator"></div>
+            <div class="separator">.</div>
         </div>
         <div id="canvas">
         </div>

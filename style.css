@@ -3,6 +3,7 @@
     --main: #202020; 
     --border: #ffffff;
     --text: #ffffff;
+    --image: none;
 }
 
 html {
@@ -12,6 +13,8 @@ html {
     overflow: hidden;
     padding: 50px;
     font-family: 'Courier New', Courier, monospace;
+    background-image: var(--image);
+    user-select: none;
 }
 
 .div {
@@ -25,6 +28,7 @@ html {
 }
 
 .top_bar {
+    vertical-align: auto;
     position: absolute;
     top: -1px;
     left: -1px;
@@ -71,10 +75,10 @@ select {
 
 .separator {
     display: inline;
-    border-left: 1px solid var(--border);
-    height: max-content;
     width: 0;
     margin: 5px;
+    color: transparent;
+    border-left:1px solid var(--border);
 }
 
 .slider {
@@ -110,8 +114,6 @@ select {
     -moz-appearance: none;
     font-family: 'Courier New', Courier, monospace;
     color: var(--text);
-    height: 30px;
-    width: 30px;
-    border-radius: 100px;
+    background-color: var(--main);
     cursor:pointer;
 }

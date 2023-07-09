@@ -5,6 +5,7 @@ var pen_size = 30;
 var tool = "pen";
 var current_color = "black";
 var css_root = document.querySelector(':root')
+var background = document.getElementById("back_image")
 
 // Elements
 
@@ -18,7 +19,7 @@ var transparent_image = document.getElementById("transparent_image");
 
 function css_get(variable) {
     var fetch = getComputedStyle(css_root);
-    return rs.getPropertyValue(`--${variable}`);
+    return fetch.getPropertyValue(`--${variable}`);
 }
 
 function css_set(variable,value) {
@@ -33,36 +34,35 @@ const themes = {
         css_set("main","#202020")
         css_set("border","#ffffff")
         css_set("text","#ffffff")
+        background.src = "none"
     },
     light: function(){
         css_set("back","#dadada")
         css_set("main","#ffffff")
         css_set("border","#000000")
         css_set("text","#000000")
+        background.src = "none"
     },
     sakura: function(){
         css_set("back","#a95d6e")
         css_set("main","#ffa3b8")
         css_set("border","#ffffff")
         css_set("text","#ffffff")
+        background.src = "images/sakura.png"
     },
     buzz: function(){
-        css_set("back","#ffe57d")
+        css_set("back","transparent")
         css_set("main","#ffefaf")
         css_set("border","#000000")
         css_set("text","#000000")
+        background.src = "images/bees.png"
     },
     pacifica: function(){
         css_set("back","#C3EFEB")
         css_set("main","#9FCECA")
         css_set("border","#ffffff")
         css_set("text","#ffffff")
-    },
-    terminal: function(){
-        css_set("back","#000000")
-        css_set("main","#000000")
-        css_set("border","#00ff00")
-        css_set("text","#00ff00")
+        background.src = "images/pacifica.png"
     },
     update: function(select){
         eval("themes." + select.value + "()")
@@ -130,6 +130,7 @@ var transparent_layer = new Layer("transparent_layer");
 transparent_layer.ctx.beginPath();
 transparent_layer.ctx.drawImage(transparent_image, 0, 0, 900, 450);
 transparent_layer.ctx.stroke();
+transparent_layer.element.style.opacity = "50%"
 
 var layer1 = new Layer("layer1");
 
